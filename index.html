@@ -26,6 +26,16 @@
         html { scroll-behavior: smooth; }
         section[id] { scroll-margin-top: 5rem; }
 
+        /* Brief highlight for anchored sections */
+        .anchor-highlight {
+            position: relative;
+            z-index: 60;
+            border-radius: inherit;
+            outline: 3px solid rgba(234,91,39,0.95);
+            box-shadow: 0 12px 30px rgba(234,91,39,0.12);
+            transition: outline 300ms ease, box-shadow 300ms ease;
+        }
+
     </style>
     <script>
         tailwind.config = {
@@ -55,10 +65,9 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="#" class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Top</a>
-                    <a href="#schedule" class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Schedule</a>
+                    <a href="#instructor" class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Instructor</a>
                     <a href="#about" class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Course Info</a>
-                    
-                    <!-- <a href="#instructor" class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Instructor</a> -->
+                    <a href="#schedule" class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Schedule</a>
                 </div>
             </div>
         </div>
@@ -622,6 +631,52 @@
         }
         
         animate();
+    </script>
+    <script>
+        // Highlight anchored sections briefly when navigating in-page links
+        (function() {
+            const HIGHLIGHT_CLASS = 'anchor-highlight';
+            const HIGHLIGHT_DURATION = 700; // ms (shorter highlight)
+
+            function highlight(target) {
+                if (!target) return;
+                target.classList.add(HIGHLIGHT_CLASS);
+                window.setTimeout(() => target.classList.remove(HIGHLIGHT_CLASS), HIGHLIGHT_DURATION);
+            }
+
+            // Intercept clicks on same-page anchors to control scrolling + highlight
+            document.addEventListener('click', (e) => {
+                const a = e.target.closest('a[href^="#"]');
+                if (!a) return;
+                const hash = a.getAttribute('href');
+                if (!hash || hash === '#') return;
+                const target = document.querySelector(hash);
+                if (!target) return;
+
+                // Prevent default and perform smooth scroll, then highlight
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Add small delay to let the browser begin scroll animation
+                window.setTimeout(() => highlight(target), 80);
+
+                // Update the URL hash without jumping
+                history.pushState(null, '', hash);
+            });
+
+            // Also highlight when navigating via back/forward or direct hash changes
+            window.addEventListener('hashchange', () => {
+                const target = document.querySelector(location.hash);
+                if (target) highlight(target);
+            });
+
+            // Highlight on page load if there's a hash
+            window.addEventListener('load', () => {
+                if (location.hash) {
+                    const target = document.querySelector(location.hash);
+                    if (target) window.setTimeout(() => highlight(target), 200);
+                }
+            });
+        })();
     </script>
 </body>
 </html>
