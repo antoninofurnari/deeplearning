@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,24 +21,30 @@
             opacity: 0.4;
             pointer-events: none;
         }
+
         .content-layer {
             position: relative;
             z-index: 10;
         }
+
         /* Smooth scroll for in-page anchors and offset for sticky nav */
-        html { scroll-behavior: smooth; }
-        section[id] { scroll-margin-top: 5rem; }
+        html {
+            scroll-behavior: smooth;
+        }
+
+        section[id] {
+            scroll-margin-top: 5rem;
+        }
 
         /* Brief highlight for anchored sections */
         .anchor-highlight {
             position: relative;
             z-index: 60;
             border-radius: inherit;
-            outline: 3px solid rgba(234,91,39,0.95);
-            box-shadow: 0 12px 30px rgba(234,91,39,0.12);
+            outline: 3px solid rgba(234, 91, 39, 0.95);
+            box-shadow: 0 12px 30px rgba(234, 91, 39, 0.12);
             transition: outline 300ms ease, box-shadow 300ms ease;
         }
-
     </style>
     <script>
         tailwind.config = {
@@ -52,6 +59,7 @@
         }
     </script>
 </head>
+
 <body class="bg-gray-50 text-gray-800 font-sans antialiased selection:bg-unictOrange selection:text-white">
 
     <!-- Navigation -->
@@ -59,17 +67,26 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <a href="https://www.unict.it" target="_blank" style="margin-right: -1.5em"><img src="https://www.brand.unict.it/img/LogoUniCT.webp" alt="UniCT Logo" class="h-12 w-auto"></a>
-    
+                    <a href="https://www.unict.it" target="_blank" style="margin-right: -1.5em"><img
+                            src="https://www.brand.unict.it/img/LogoUniCT.webp" alt="UniCT Logo"
+                            class="h-12 w-auto"></a>
+
                     <span class="ml-4 text-sm font-medium text-gray-500 hidden sm:block border-l pl-4 border-gray-300">
-                        <a href="https://web.dmi.unict.it/" target="_blank" class="text-gray-600 hover:text-unictOrange">Department of Mathematics and Computer Science</a>
+                        <a href="https://web.dmi.unict.it/" target="_blank"
+                            class="text-gray-600 hover:text-unictOrange">Department of Mathematics and Computer
+                            Science</a>
                     </span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="#" class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Top</a>
-                    <a href="#instructor" class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Instructor</a>
-                    <a href="#about" class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Course Info</a>
-                    <a href="#schedule" class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Schedule</a>
+                    <a href="#"
+                        class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Top</a>
+                    <a href="#instructor"
+                        class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Instructor</a>
+                    <a href="#about"
+                        class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Course
+                        Info</a>
+                    <a href="#schedule"
+                        class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Schedule</a>
                 </div>
             </div>
         </div>
@@ -79,10 +96,10 @@
     <header class="relative bg-white overflow-hidden border-b border-gray-200">
         <!-- Interactive Canvas Background -->
         <canvas id="network-canvas"></canvas>
-        
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 content-layer" style="padding-top:1em">
             <div class="text-center max-w-4xl mx-auto">
-                
+
                 <!--<h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 tracking-tight mb-4">
                     DEEP <span class="text-unictOrange">LEARNING</span>
                 </h1>
@@ -90,20 +107,27 @@
                     Advanced Models and Methods
                 </h2>-->
                 <img src="logo.png" alt="Course Logo" class="mx-auto mb-8 w-96 h-auto">
-                <div class="inline-flex items-center px-4 py-2 rounded-full bg-orange-100 text-unictOrange font-semibold text-sm mb-6 tracking-wide uppercase">
-                    <i data-lucide="cpu" class="w-4 h-4 mr-2"></i> <a target="_blank" href="https://web.dmi.unict.it/corsi/lm-18">Computer Science Master's Degree</a>
+                <div
+                    class="inline-flex items-center px-4 py-2 rounded-full bg-orange-100 text-unictOrange font-semibold text-sm mb-6 tracking-wide uppercase">
+                    <i data-lucide="cpu" class="w-4 h-4 mr-2"></i> <a target="_blank"
+                        href="https://web.dmi.unict.it/corsi/lm-18">Computer Science Master's Degree</a>
                 </div>
                 <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-                    Explore state-of-the-art architectures, from sequential modeling and vision-language integration to domain adaptation and self-supervised paradigms.
+                    Explore state-of-the-art architectures, from sequential modeling and vision-language integration to
+                    domain adaptation and self-supervised paradigms.
                 </p>
                 <div class="flex justify-center gap-4">
-                    <a href="#schedule" class="bg-unictOrange hover:bg-orange-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
+                    <a href="#schedule"
+                        class="bg-unictOrange hover:bg-orange-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
                         View Schedule
                     </a>
-                    <a href="#about" class="bg-white border-2 border-gray-200 hover:border-unictOrange text-gray-700 hover:text-unictOrange font-bold py-3 px-8 rounded-lg shadow-sm transition-all duration-300">
+                    <a href="#about"
+                        class="bg-white border-2 border-gray-200 hover:border-unictOrange text-gray-700 hover:text-unictOrange font-bold py-3 px-8 rounded-lg shadow-sm transition-all duration-300">
                         Course Info
                     </a>
-                    <a href="slides/02-03-26-intro-slides-prospettive-informatiche.pdf" target="_blank" rel="noopener noreferrer" class="bg-white border-2 border-gray-200 hover:border-unictOrange text-gray-700 hover:text-unictOrange font-bold py-3 px-8 rounded-lg shadow-sm transition-all duration-300 inline-flex items-center">
+                    <a href="slides/02-03-26-intro-slides-prospettive-informatiche.pdf" target="_blank"
+                        rel="noopener noreferrer"
+                        class="bg-white border-2 border-gray-200 hover:border-unictOrange text-gray-700 hover:text-unictOrange font-bold py-3 px-8 rounded-lg shadow-sm transition-all duration-300 inline-flex items-center">
                         <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Intro Slides
                     </a>
                 </div>
@@ -113,9 +137,9 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            
+
             <!-- Left Column: Instructor & Info -->
             <div class="lg:col-span-1 space-y-8">
                 <!-- Instructor Card -->
@@ -124,15 +148,19 @@
                         <i data-lucide="user" class="w-5 h-5 mr-3 text-unictOrange"></i> Course Instructor
                     </h3>
                     <div class="flex items-start space-x-4">
-                        <img src="https://antoninofurnari.github.io/images/profile.jpg" alt="Prof. Antonino Furnari" class="w-16 h-16 rounded-full object-cover flex-shrink-0 shadow-md">
+                        <img src="https://antoninofurnari.github.io/images/profile.jpg" alt="Prof. Antonino Furnari"
+                            class="w-16 h-16 rounded-full object-cover flex-shrink-0 shadow-md">
                         <div>
                             <h4 class="text-lg font-bold text-gray-900">Prof. Antonino Furnari</h4>
                             <p class="text-sm text-gray-600 mb-3">Associate Professor<br>DMI, University of Catania</p>
-                            <a href="http://antoninofurnari.github.io" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-sm font-medium text-unictOrange hover:text-orange-700">
+                            <a href="http://antoninofurnari.github.io" target="_blank" rel="noopener noreferrer"
+                                class="inline-flex items-center text-sm font-medium text-unictOrange hover:text-orange-700">
                                 <i data-lucide="external-link" class="w-4 h-4 mr-1"></i> Website
                             </a>
                             <br>
-                            <a href="https://antoninofurnari.github.io/ricevimento/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-sm font-medium text-unictOrange hover:text-orange-700 mt-2">
+                            <a href="https://antoninofurnari.github.io/ricevimento/" target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center text-sm font-medium text-unictOrange hover:text-orange-700 mt-2">
                                 <i data-lucide="clock" class="w-4 h-4 mr-1"></i> Office Hours
                             </a>
                         </div>
@@ -159,18 +187,26 @@
                                 <span class="text-sm text-gray-600">Lectures & Practical Labs (PyTorch)</span>
                             </div>
                         </li>
-                                <li class="flex items-start">
-                                    <i data-lucide="file-text" class="w-5 h-5 mr-3 text-gray-400 mt-0.5"></i>
-                                    <div>
-                                        <span class="block font-medium text-gray-900">Intro Slides</span>
-                                        <a href="slides/02-03-26-intro-slides-prospettive-informatiche.pdf" target="_blank" rel="noopener noreferrer" class="text-sm text-unictOrange hover:text-orange-700 font-medium">General introduction (Slides) →</a>
-                                    </div>
-                                </li>
+                        <li class="flex items-start">
+                            <i data-lucide="file-text" class="w-5 h-5 mr-3 text-gray-400 mt-0.5"></i>
+                            <div>
+                                <span class="block font-medium text-gray-900">Intro Slides</span>
+                                <a href="slides/02-03-26-intro-slides-prospettive-informatiche.pdf" target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="text-sm text-unictOrange hover:text-orange-700 font-medium">General
+                                    introduction (Slides) →</a>
+                                <br>
+                                <a href="slides/03-03-26-intro-course.pdf" target="_blank" rel="noopener noreferrer"
+                                    class="text-sm text-unictOrange hover:text-orange-700 font-medium">Introduction to
+                                    the Course &amp; Labs (Slides) →</a>
+                            </div>
+                        </li>
                         <li class="flex items-start">
                             <i data-lucide="clock" class="w-5 h-5 mr-3 text-gray-400 mt-0.5"></i>
                             <div>
                                 <span class="block font-medium text-gray-900">Lectures</span>
-                                <span class="text-sm text-gray-600">Tuesdays & Thursdays <br> 17:00–19:00 — Room 126</span>
+                                <span class="text-sm text-gray-600">Tuesdays & Thursdays <br> 17:00–19:00 — Room
+                                    126</span>
                             </div>
                         </li>
                         <li class="flex items-start">
@@ -184,7 +220,10 @@
                             <i data-lucide="file-text" class="w-5 h-5 mr-3 text-gray-400 mt-0.5"></i>
                             <div>
                                 <span class="block font-medium text-gray-900">Official Syllabus</span>
-                                <a href="https://web.dmi.unict.it/corsi/lm-18/insegnamenti?seuid=3540D939-DA16-4C1D-983C-E6B85C403F2F" target="_blank" rel="noopener noreferrer" class="text-sm text-unictOrange hover:text-orange-700 font-medium">View on DMI Portal →</a>
+                                <a href="https://web.dmi.unict.it/corsi/lm-18/insegnamenti?seuid=3540D939-DA16-4C1D-983C-E6B85C403F2F"
+                                    target="_blank" rel="noopener noreferrer"
+                                    class="text-sm text-unictOrange hover:text-orange-700 font-medium">View on DMI
+                                    Portal →</a>
                             </div>
                         </li>
                     </ul>
@@ -197,24 +236,36 @@
                     <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center">
                         <i data-lucide="calendar" class="w-6 h-6 mr-3 text-unictOrange"></i> Course Schedule
                     </h2>
-                    
+
                     <div class="relative border-l-2 border-orange-100 ml-3 md:ml-4 space-y-8 pb-4">
-                        
+
                         <!-- Module 1 -->
                         <div class="relative pl-8">
-                            <div class="absolute w-4 h-4 bg-white border-2 border-unictOrange rounded-full -left-[9px] top-1"></div>
+                            <div
+                                class="absolute w-4 h-4 bg-white border-2 border-unictOrange rounded-full -left-[9px] top-1">
+                            </div>
                             <h3 class="text-lg font-bold text-gray-900">Introduction</h3>
                             <ul class="mt-3 space-y-2">
-                                <li class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
                                     <span class="flex items-center">
-                                        <i data-lucide="presentation" class="w-4 h-4 mr-3 text-gray-400"></i> Introduction to the Course & Labs
+                                        <i data-lucide="presentation" class="w-4 h-4 mr-3 text-gray-400"></i>
+                                        Introduction to the Course & Labs
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
-                                            <i data-lucide="file-pdf" class="w-3 h-3"></i> Slides
-                                        </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 03/03/25
+                                        <a href="slides/03-03-26-intro-course.pdf" target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-unictOrange hover:bg-orange-700 text-white text-xs font-semibold rounded transition-colors">
+                                            <i data-lucide="presentation" class="w-3 h-3"></i> Slides
+                                        </a>
+                                        <a href="notebooks/03-03-26-intro-laboratories.ipynb" target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-unictOrange hover:bg-orange-700 text-white text-xs font-semibold rounded transition-colors">
+                                            <i data-lucide="notebook" class="w-3 h-3"></i> Notebook
+                                        </a>
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 03/03/26
                                         </span>
                                     </div>
                                 </li>
@@ -223,58 +274,76 @@
 
                         <!-- Module 2 -->
                         <div class="relative pl-8">
-                            <div class="absolute w-4 h-4 bg-white border-2 border-unictOrange rounded-full -left-[9px] top-1"></div>
+                            <div
+                                class="absolute w-4 h-4 bg-white border-2 border-unictOrange rounded-full -left-[9px] top-1">
+                            </div>
                             <h3 class="text-lg font-bold text-gray-900">Sequential & Metric Learning</h3>
                             <ul class="mt-3 space-y-2">
-                                <li class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
                                     <span class="flex items-center">
-                                        <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Recap on Transformers
+                                        <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Recap on
+                                        Transformers
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <span class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded">
                                             <i data-lucide="share2" class="w-3 h-3"></i> Slides on MS Teams
                                         </span>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 05/03/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 05/03/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
                                     <span class="flex items-center">
-                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Recap on Transformers Lab
+                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Recap on
+                                        Transformers Lab
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <a href="https://github.com/harvardnlp/annotated-transformer" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2 py-1 bg-unictOrange hover:bg-orange-700 text-white text-xs font-semibold rounded transition-colors">
+                                        <a href="https://github.com/harvardnlp/annotated-transformer" target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-unictOrange hover:bg-orange-700 text-white text-xs font-semibold rounded transition-colors">
                                             <i data-lucide="notebook" class="w-3 h-3"></i> Notebook
                                         </a>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 17/03/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 17/03/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
                                     <span class="flex items-center">
                                         <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Metric Learning
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
-                                            <i data-lucide="file-pdf" class="w-3 h-3"></i> Slides
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                            <i data-lucide="presentation" class="w-3 h-3"></i> Slides
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 19/03/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 19/03/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
                                     <span class="flex items-center">
-                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Metric Learning Lab
+                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Metric Learning
+                                        Lab
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
                                             <i data-lucide="notebook" class="w-3 h-3"></i> Notebook
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 24/03/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 24/03/26
                                         </span>
                                     </div>
                                 </li>
@@ -283,58 +352,75 @@
 
                         <!-- Module 3 -->
                         <div class="relative pl-8">
-                            <div class="absolute w-4 h-4 bg-white border-2 border-unictOrange rounded-full -left-[9px] top-1"></div>
+                            <div
+                                class="absolute w-4 h-4 bg-white border-2 border-unictOrange rounded-full -left-[9px] top-1">
+                            </div>
                             <h3 class="text-lg font-bold text-gray-900">Distillation & Adaptation</h3>
                             <ul class="mt-3 space-y-2">
-                                <li class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
                                     <span class="flex items-center">
-                                        <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Knowledge Distillation
+                                        <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Knowledge
+                                        Distillation
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
-                                            <i data-lucide="file-pdf" class="w-3 h-3"></i> Slides
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                            <i data-lucide="presentation" class="w-3 h-3"></i> Slides
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 26/03/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 26/03/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
                                     <span class="flex items-center">
-                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Knowledge Distillation Lab
+                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Knowledge
+                                        Distillation Lab
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
                                             <i data-lucide="notebook" class="w-3 h-3"></i> Notebook
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 07/04/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 07/04/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
                                     <span class="flex items-center">
                                         <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Domain Adaptation
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
-                                            <i data-lucide="file-pdf" class="w-3 h-3"></i> Slides
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                            <i data-lucide="presentation" class="w-3 h-3"></i> Slides
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 09/04/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 09/04/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
                                     <span class="flex items-center">
-                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Domain Adaptation Lab
+                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Domain
+                                        Adaptation Lab
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
                                             <i data-lucide="notebook" class="w-3 h-3"></i> Notebook
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 14/04/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 14/04/26
                                         </span>
                                     </div>
                                 </li>
@@ -343,32 +429,42 @@
 
                         <!-- Module 4 -->
                         <div class="relative pl-8">
-                            <div class="absolute w-4 h-4 bg-white border-2 border-unictOrange rounded-full -left-[9px] top-1"></div>
+                            <div
+                                class="absolute w-4 h-4 bg-white border-2 border-unictOrange rounded-full -left-[9px] top-1">
+                            </div>
                             <h3 class="text-lg font-bold text-gray-900">Self-Supervised Learning</h3>
                             <ul class="mt-3 space-y-2">
-                                <li class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
                                     <span class="flex items-center">
-                                        <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Self-Supervised Learning
+                                        <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Self-Supervised
+                                        Learning
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
-                                            <i data-lucide="file-pdf" class="w-3 h-3"></i> Slides
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                            <i data-lucide="presentation" class="w-3 h-3"></i> Slides
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 16/04/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 16/04/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
                                     <span class="flex items-center">
-                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Self-Supervised Learning Lab
+                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Self-Supervised
+                                        Learning Lab
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
                                             <i data-lucide="notebook" class="w-3 h-3"></i> Notebook
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 21/04/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 21/04/26
                                         </span>
                                     </div>
                                 </li>
@@ -377,76 +473,97 @@
 
                         <!-- Itinere 1 -->
                         <div class="relative pl-8">
-                            <div class="absolute w-6 h-6 bg-unictOrange rounded-full -left-[13px] top-0 flex items-center justify-center shadow-md">
+                            <div
+                                class="absolute w-6 h-6 bg-unictOrange rounded-full -left-[13px] top-0 flex items-center justify-center shadow-md">
                                 <i data-lucide="check" class="w-3 h-3 text-white"></i>
                             </div>
-                            <div class="bg-gray-900 text-white p-4 rounded-lg shadow-md flex items-center justify-between">
+                            <div
+                                class="bg-gray-900 text-white p-4 rounded-lg shadow-md flex items-center justify-between">
                                 <div>
                                     <h3 class="text-lg font-bold flex items-center">
                                         Prova in Itinere 1
                                     </h3>
-                                    <p class="text-gray-300 text-sm mt-1">Mid-term assessment covering topics up to Self-Supervised Learning.</p>
+                                    <p class="text-gray-300 text-sm mt-1">Mid-term assessment covering topics up to
+                                        Self-Supervised Learning.</p>
                                 </div>
-                                <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                    <i data-lucide="calendar" class="w-3 h-3"></i> 23/04/25
+                                <span
+                                    class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                    <i data-lucide="calendar" class="w-3 h-3"></i> 23/04/26
                                 </span>
                             </div>
                         </div>
 
                         <!-- Module 5 -->
                         <div class="relative pl-8">
-                            <div class="absolute w-4 h-4 bg-white border-2 border-unictOrange rounded-full -left-[9px] top-1"></div>
+                            <div
+                                class="absolute w-4 h-4 bg-white border-2 border-unictOrange rounded-full -left-[9px] top-1">
+                            </div>
                             <h3 class="text-lg font-bold text-gray-900">Video & Multi-Modal Understanding</h3>
                             <ul class="mt-3 space-y-2">
-                                <li class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
                                     <span class="flex items-center">
-                                        <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Video Classification Architectures
+                                        <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Video
+                                        Classification Architectures
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <span class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded">
                                             <i data-lucide="share2" class="w-3 h-3"></i> Slides on MS Teams
                                         </span>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 28/04/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 28/04/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
                                     <span class="flex items-center">
-                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Video Understanding Lab
+                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Video
+                                        Understanding Lab
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
                                             <i data-lucide="notebook" class="w-3 h-3"></i> Notebook
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 30/04/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 30/04/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
                                     <span class="flex items-center">
                                         <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Vision & Language
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
-                                            <i data-lucide="file-pdf" class="w-3 h-3"></i> Slides
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                            <i data-lucide="presentation" class="w-3 h-3"></i> Slides
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 05/05/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 05/05/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
                                     <span class="flex items-center">
-                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Vision & Language Lab
+                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Vision &
+                                        Language Lab
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
                                             <i data-lucide="notebook" class="w-3 h-3"></i> Notebook
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 07/05/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 07/05/26
                                         </span>
                                     </div>
                                 </li>
@@ -455,83 +572,110 @@
 
                         <!-- Module 6 -->
                         <div class="relative pl-8">
-                            <div class="absolute w-4 h-4 bg-white border-2 border-unictOrange rounded-full -left-[9px] top-1"></div>
+                            <div
+                                class="absolute w-4 h-4 bg-white border-2 border-unictOrange rounded-full -left-[9px] top-1">
+                            </div>
                             <h3 class="text-lg font-bold text-gray-900">Advanced Models</h3>
                             <ul class="mt-3 space-y-2">
-                                <li class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
                                     <span class="flex items-center">
-                                        <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Advanced Sequential Modeling
+                                        <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Advanced
+                                        Sequential Modeling
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
-                                            <i data-lucide="file-pdf" class="w-3 h-3"></i> Slides
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                            <i data-lucide="presentation" class="w-3 h-3"></i> Slides
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 12/05/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 12/05/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
                                     <span class="flex items-center">
-                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Sequential Modeling Lab
+                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Sequential
+                                        Modeling Lab
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
                                             <i data-lucide="notebook" class="w-3 h-3"></i> Notebook
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 14/05/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 14/05/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
                                     <span class="flex items-center">
-                                        <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Reinforcement Learning
+                                        <i data-lucide="book" class="w-4 h-4 mr-3 text-gray-400"></i> Reinforcement
+                                        Learning
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
-                                            <i data-lucide="file-pdf" class="w-3 h-3"></i> Slides
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                            <i data-lucide="presentation" class="w-3 h-3"></i> Slides
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 19/05/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 19/05/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
                                     <span class="flex items-center">
-                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Reinforcement Learning Lab
+                                        <i data-lucide="code" class="w-4 h-4 mr-3 text-unictOrange"></i> Reinforcement
+                                        Learning Lab
                                     </span>
                                     <div class="flex items-center gap-2">
-                                        <button disabled class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
+                                        <button disabled
+                                            class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
                                             <i data-lucide="notebook" class="w-3 h-3"></i> Notebook
                                         </button>
-                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i> 21/05/25
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                            <i data-lucide="calendar" class="w-3 h-3"></i> 21/05/26
                                         </span>
                                     </div>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
                                     <span class="flex items-center">
-                                        <i data-lucide="presentation" class="w-4 h-4 mr-3 text-gray-400"></i> Seminar: TBA
+                                        <i data-lucide="presentation" class="w-4 h-4 mr-3 text-gray-400"></i> Seminar:
+                                        TBA
                                     </span>
-                                    <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                        <i data-lucide="calendar" class="w-3 h-3"></i> 26/05/25
+                                    <span
+                                        class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                        <i data-lucide="calendar" class="w-3 h-3"></i> 26/05/26
                                     </span>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
                                     <span class="flex items-center">
-                                        <i data-lucide="presentation" class="w-4 h-4 mr-3 text-unictOrange"></i> Seminar: TBA
+                                        <i data-lucide="presentation" class="w-4 h-4 mr-3 text-unictOrange"></i>
+                                        Seminar: TBA
                                     </span>
-                                    <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                        <i data-lucide="calendar" class="w-3 h-3"></i> 28/05/25
+                                    <span
+                                        class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                        <i data-lucide="calendar" class="w-3 h-3"></i> 28/05/26
                                     </span>
                                 </li>
-                                <li class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
+                                <li
+                                    class="flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
                                     <span class="flex items-center">
-                                        <i data-lucide="presentation" class="w-4 h-4 mr-3 text-gray-400"></i> Seminar: TBA
+                                        <i data-lucide="presentation" class="w-4 h-4 mr-3 text-gray-400"></i> Seminar:
+                                        TBA
                                     </span>
-                                    <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                        <i data-lucide="calendar" class="w-3 h-3"></i> 09/06/25
+                                    <span
+                                        class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                        <i data-lucide="calendar" class="w-3 h-3"></i> 09/06/26
                                     </span>
                                 </li>
                             </ul>
@@ -539,18 +683,22 @@
 
                         <!-- Itinere 2 -->
                         <div class="relative pl-8">
-                            <div class="absolute w-6 h-6 bg-unictOrange rounded-full -left-[13px] top-0 flex items-center justify-center shadow-md">
+                            <div
+                                class="absolute w-6 h-6 bg-unictOrange rounded-full -left-[13px] top-0 flex items-center justify-center shadow-md">
                                 <i data-lucide="check" class="w-3 h-3 text-white"></i>
                             </div>
-                            <div class="bg-gray-900 text-white p-4 rounded-lg shadow-md flex items-center justify-between">
+                            <div
+                                class="bg-gray-900 text-white p-4 rounded-lg shadow-md flex items-center justify-between">
                                 <div>
                                     <h3 class="text-lg font-bold flex items-center">
                                         Prova in Itinere 2
                                     </h3>
-                                    <p class="text-gray-300 text-sm mt-1">Final assessment covering advanced topics and architectures.</p>
+                                    <p class="text-gray-300 text-sm mt-1">Final assessment covering advanced topics and
+                                        architectures.</p>
                                 </div>
-                                <span class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
-                                    <i data-lucide="calendar" class="w-3 h-3"></i> 11/06/25
+                                <span
+                                    class="inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full">
+                                    <i data-lucide="calendar" class="w-3 h-3"></i> 11/06/26
                                 </span>
                             </div>
                         </div>
@@ -563,10 +711,11 @@
 
     <footer class="bg-unictDark text-white py-12 border-t-4 border-unictOrange">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            
+
             <p class="text-gray-400 mb-2">Deep Learning: Advanced Models and Methods</p>
-            <p class="text-gray-500 text-sm">Department of Mathematics and Computer Science (DMI)<br>University of Catania</p>
-            
+            <p class="text-gray-500 text-sm">Department of Mathematics and Computer Science (DMI)<br>University of
+                Catania</p>
+
         </div>
     </footer>
 
@@ -619,16 +768,16 @@
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
+
             for (let i = 0; i < particles.length; i++) {
                 particles[i].update();
                 particles[i].draw();
-                
+
                 for (let j = i + 1; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
-                    
+
                     if (distance < 120) {
                         ctx.beginPath();
                         ctx.strokeStyle = `rgba(234, 91, 39, ${1 - distance / 120})`;
@@ -641,12 +790,12 @@
             }
             requestAnimationFrame(animate);
         }
-        
+
         animate();
     </script>
     <script>
         // Highlight anchored sections briefly when navigating in-page links
-        (function() {
+        (function () {
             const HIGHLIGHT_CLASS = 'anchor-highlight';
             const HIGHLIGHT_DURATION = 700; // ms (shorter highlight)
 
@@ -691,4 +840,5 @@
         })();
     </script>
 </body>
+
 </html>
