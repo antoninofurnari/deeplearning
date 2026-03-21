@@ -1,789 +1,958 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Deep Learning: Advanced Models and Methods - UniCT</title>
-    <link rel="icon" href="logo.png" type="image/png">
-    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" href="logo.png" type="image/png" />
+    <link rel="apple-touch-icon" href="logo.png" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Custom styles for the interactive node background */
-        #network-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.4;
-            pointer-events: none;
-        }
+      /* Custom styles for the interactive node background */
+      #network-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        opacity: 0.4;
+        pointer-events: none;
+      }
 
-        .content-layer {
-            position: relative;
-            z-index: 10;
-        }
+      .content-layer {
+        position: relative;
+        z-index: 10;
+      }
 
-        /* Smooth scroll for in-page anchors and offset for sticky nav */
-        html {
-            scroll-behavior: smooth;
-        }
+      /* Smooth scroll for in-page anchors and offset for sticky nav */
+      html {
+        scroll-behavior: smooth;
+      }
 
-        section[id] {
-            scroll-margin-top: 5rem;
-        }
+      section[id] {
+        scroll-margin-top: 5rem;
+      }
 
-        /* Brief highlight for anchored sections */
-        .anchor-highlight {
-            position: relative;
-            z-index: 60;
-            border-radius: inherit;
-            outline: 3px solid rgba(234, 91, 39, 0.95);
-            box-shadow: 0 12px 30px rgba(234, 91, 39, 0.12);
-            transition: outline 300ms ease, box-shadow 300ms ease;
-        }
+      /* Brief highlight for anchored sections */
+      .anchor-highlight {
+        position: relative;
+        z-index: 60;
+        border-radius: inherit;
+        outline: 3px solid rgba(234, 91, 39, 0.95);
+        box-shadow: 0 12px 30px rgba(234, 91, 39, 0.12);
+        transition:
+          outline 300ms ease,
+          box-shadow 300ms ease;
+      }
+
+      .today-marker-line {
+        opacity: 1;
+      }
+
+      /* Past items styling */
+      .past-item {
+        opacity: 0.5;
+      }
+
+      .course-ended .past-item {
+        opacity: 1;
+      }
+
+      .past-module-dot {
+        background-color: #ea5b27 !important;
+        border-color: #ea5b27 !important;
+        color: white !important;
+      }
+
+      /* Lucide replaces <i> with <svg> which inherits the Tailwind color class —
+         force stroke to white so the check icon is visible on the filled dot */
+      .past-module-dot svg {
+        stroke: white !important;
+        color: white !important;
+      }
+
+      /* Past assessment: fade only the inner card, not the dot */
+      .past-assessment .assessment-card {
+        opacity: 0.5;
+      }
+
+      /* Past seminar: swap orange background to gray */
+      .past-item.seminar-item {
+        background-color: #9ca3af !important;
+        border-color: #6b7280 !important;
+        opacity: 1;
+      }
     </style>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        unictOrange: '#EA5B27', // Matched to the image orange
-                        unictDark: '#1E1E1E'
-                    }
-                }
-            }
-        }
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              unictOrange: "#EA5B27", // Matched to the image orange
+              unictDark: "#1E1E1E",
+            },
+          },
+        },
+      };
     </script>
-</head>
+  </head>
 
-<body class="bg-gray-50 text-gray-800 font-sans antialiased selection:bg-unictOrange selection:text-white">
-
+  <body
+    class="bg-gray-50 text-gray-800 font-sans antialiased selection:bg-unictOrange selection:text-white"
+  >
     <!-- Navigation -->
     <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="https://www.unict.it" target="_blank" style="margin-right: -1.5em"><img
-                            src="https://www.brand.unict.it/img/LogoUniCT.webp" alt="UniCT Logo"
-                            class="h-12 w-auto"></a>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <a
+              href="https://www.unict.it"
+              target="_blank"
+              style="margin-right: -1.5em"
+              ><img
+                src="https://www.brand.unict.it/img/LogoUniCT.webp"
+                alt="UniCT Logo"
+                class="h-12 w-auto"
+            /></a>
 
-                    <span class="ml-4 text-sm font-medium text-gray-500 hidden sm:block border-l pl-4 border-gray-300">
-                        <a href="https://web.dmi.unict.it/" target="_blank"
-                            class="text-gray-600 hover:text-unictOrange">Department of Mathematics and Computer
-                            Science</a>
-                    </span>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="#"
-                        class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Top</a>
-                    <a href="#instructor"
-                        class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Instructor</a>
-                    <a href="#about"
-                        class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Course
-                        Info</a>
-                    <a href="#schedule"
-                        class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium">Schedule</a>
-                </div>
-            </div>
+            <span
+              class="ml-4 text-sm font-medium text-gray-500 hidden sm:block border-l pl-4 border-gray-300"
+            >
+              <a
+                href="https://web.dmi.unict.it/"
+                target="_blank"
+                class="text-gray-600 hover:text-unictOrange"
+                >Department of Mathematics and Computer Science</a
+              >
+            </span>
+          </div>
+          <div class="flex items-center space-x-4">
+            <a
+              href="#"
+              class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium"
+              >Top</a
+            >
+            <a
+              href="#instructor"
+              class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium"
+              >Instructor</a
+            >
+            <a
+              href="#about"
+              class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium"
+              >Course Info</a
+            >
+            <a
+              href="#schedule"
+              class="text-gray-600 hover:text-unictOrange transition-colors px-3 py-2 text-sm font-medium"
+              >Schedule</a
+            >
+          </div>
         </div>
+      </div>
     </nav>
 
     <!-- Hero Section -->
     <header class="relative bg-white overflow-hidden border-b border-gray-200">
-        <!-- Interactive Canvas Background -->
-        <canvas id="network-canvas"></canvas>
+      <!-- Interactive Canvas Background -->
+      <canvas id="network-canvas"></canvas>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 content-layer" style="padding-top:1em">
-            <div class="text-center max-w-4xl mx-auto">
-
-                <!--<h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 tracking-tight mb-4">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 content-layer"
+        style="padding-top: 1em"
+      >
+        <div class="text-center max-w-4xl mx-auto">
+          <!--<h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 tracking-tight mb-4">
                     DEEP <span class="text-unictOrange">LEARNING</span>
                 </h1>
                 <h2 class="text-2xl md:text-3xl font-light text-gray-600 mb-8 uppercase tracking-widest">
                     Advanced Models and Methods
                 </h2>-->
-                <img src="logo.png" alt="Course Logo" class="mx-auto mb-8 w-96 h-auto">
-                <div
-                    class="inline-flex items-center px-4 py-2 rounded-full bg-orange-100 text-unictOrange font-semibold text-sm mb-6 tracking-wide uppercase">
-                    <i data-lucide="cpu" class="w-4 h-4 mr-2"></i> <a target="_blank"
-                        href="https://web.dmi.unict.it/corsi/lm-18">Computer Science Master's Degree</a>
-                </div>
-                <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-                    Explore state-of-the-art architectures, from sequential modeling and vision-language integration to
-                    domain adaptation and self-supervised paradigms.
-                </p>
-                <div class="flex justify-center gap-4">
-                    <a href="#schedule"
-                        class="bg-unictOrange hover:bg-orange-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
-                        View Schedule
-                    </a>
-                    <a href="#about"
-                        class="bg-white border-2 border-gray-200 hover:border-unictOrange text-gray-700 hover:text-unictOrange font-bold py-3 px-8 rounded-lg shadow-sm transition-all duration-300">
-                        Course Info
-                    </a>
-                    <a href="slides/02-03-26-intro-slides-prospettive-informatiche.pdf" target="_blank"
-                        rel="noopener noreferrer"
-                        class="bg-white border-2 border-gray-200 hover:border-unictOrange text-gray-700 hover:text-unictOrange font-bold py-3 px-8 rounded-lg shadow-sm transition-all duration-300 inline-flex items-center">
-                        <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Intro Slides
-                    </a>
-                </div>
-            </div>
+          <img
+            src="logo.png"
+            alt="Course Logo"
+            class="mx-auto mb-8 w-96 h-auto"
+          />
+          <div
+            class="inline-flex items-center px-4 py-2 rounded-full bg-orange-100 text-unictOrange font-semibold text-sm mb-6 tracking-wide uppercase"
+          >
+            <i data-lucide="cpu" class="w-4 h-4 mr-2"></i>
+            <a target="_blank" href="https://web.dmi.unict.it/corsi/lm-18"
+              >Computer Science Master's Degree</a
+            >
+          </div>
+          <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+            Explore state-of-the-art architectures, from sequential modeling and
+            vision-language integration to domain adaptation and self-supervised
+            paradigms.
+          </p>
+          <div class="flex justify-center gap-4">
+            <a
+              href="#schedule"
+              class="bg-unictOrange hover:bg-orange-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
+            >
+              View Schedule
+            </a>
+            <a
+              href="#about"
+              class="bg-white border-2 border-gray-200 hover:border-unictOrange text-gray-700 hover:text-unictOrange font-bold py-3 px-8 rounded-lg shadow-sm transition-all duration-300"
+            >
+              Course Info
+            </a>
+            <a
+              href="slides/02-03-26-intro-slides-prospettive-informatiche.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="bg-white border-2 border-gray-200 hover:border-unictOrange text-gray-700 hover:text-unictOrange font-bold py-3 px-8 rounded-lg shadow-sm transition-all duration-300 inline-flex items-center"
+            >
+              <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Intro Slides
+            </a>
+          </div>
         </div>
+      </div>
     </header>
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <!-- Left Column: Instructor & Info -->
+        <div class="lg:col-span-1 space-y-8">
+          <!-- Instructor Card -->
+          <section
+            id="instructor"
+            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8"
+          >
+            <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+              <i data-lucide="user" class="w-5 h-5 mr-3 text-unictOrange"></i>
+              Course Instructor
+            </h3>
+            <div class="flex items-start space-x-4">
+              <img
+                src="https://antoninofurnari.github.io/images/profile.jpg"
+                alt="Prof. Antonino Furnari"
+                class="w-16 h-16 rounded-full object-cover flex-shrink-0 shadow-md"
+              />
+              <div>
+                <h4 class="text-lg font-bold text-gray-900">
+                  Prof. Antonino Furnari
+                </h4>
+                <p class="text-sm text-gray-600 mb-3">
+                  Associate Professor<br />DMI, University of Catania
+                </p>
+                <a
+                  href="http://antoninofurnari.github.io"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center text-sm font-medium text-unictOrange hover:text-orange-700"
+                >
+                  <i data-lucide="external-link" class="w-4 h-4 mr-1"></i>
+                  Website
+                </a>
+                <br />
+                <a
+                  href="https://antoninofurnari.github.io/ricevimento/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center text-sm font-medium text-unictOrange hover:text-orange-700 mt-2"
+                >
+                  <i data-lucide="clock" class="w-4 h-4 mr-1"></i> Office Hours
+                </a>
+              </div>
+            </div>
+          </section>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-
-            <!-- Left Column: Instructor & Info -->
-            <div class="lg:col-span-1 space-y-8">
-                <!-- Instructor Card -->
-                <section id="instructor" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                        <i data-lucide="user" class="w-5 h-5 mr-3 text-unictOrange"></i> Course Instructor
-                    </h3>
-                    <div class="flex items-start space-x-4">
-                        <img src="https://antoninofurnari.github.io/images/profile.jpg" alt="Prof. Antonino Furnari"
-                            class="w-16 h-16 rounded-full object-cover flex-shrink-0 shadow-md">
-                        <div>
-                            <h4 class="text-lg font-bold text-gray-900">Prof. Antonino Furnari</h4>
-                            <p class="text-sm text-gray-600 mb-3">Associate Professor<br>DMI, University of Catania</p>
-                            <a href="http://antoninofurnari.github.io" target="_blank" rel="noopener noreferrer"
-                                class="inline-flex items-center text-sm font-medium text-unictOrange hover:text-orange-700">
-                                <i data-lucide="external-link" class="w-4 h-4 mr-1"></i> Website
-                            </a>
-                            <br>
-                            <a href="https://antoninofurnari.github.io/ricevimento/" target="_blank"
-                                rel="noopener noreferrer"
-                                class="inline-flex items-center text-sm font-medium text-unictOrange hover:text-orange-700 mt-2">
-                                <i data-lucide="clock" class="w-4 h-4 mr-1"></i> Office Hours
-                            </a>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Course Details -->
-                <section id="about" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                        <i data-lucide="info" class="w-5 h-5 mr-3 text-unictOrange"></i> Course Details
-                    </h3>
-                    <ul class="space-y-4">
-                        <li class="flex items-start">
-                            <i data-lucide="map-pin" class="w-5 h-5 mr-3 text-gray-400 mt-0.5"></i>
-                            <div>
-                                <span class="block font-medium text-gray-900">Location</span>
-                                <span class="text-sm text-gray-600">DMI, University of Catania</span>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <i data-lucide="book-open" class="w-5 h-5 mr-3 text-gray-400 mt-0.5"></i>
-                            <div>
-                                <span class="block font-medium text-gray-900">Format</span>
-                                <span class="text-sm text-gray-600">Lectures & Practical Labs (PyTorch)</span>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <i data-lucide="file-text" class="w-5 h-5 mr-3 text-gray-400 mt-0.5"></i>
-                            <div>
-                                <span class="block font-medium text-gray-900">Intro Slides</span>
-                                <a href="slides/02-03-26-intro-slides-prospettive-informatiche.pdf" target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="text-sm text-unictOrange hover:text-orange-700 font-medium">General
-                                    introduction (Slides) →</a>
-                                <!-- <br>
+          <!-- Course Details -->
+          <section
+            id="about"
+            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8"
+          >
+            <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+              <i data-lucide="info" class="w-5 h-5 mr-3 text-unictOrange"></i>
+              Course Details
+            </h3>
+            <ul class="space-y-4">
+              <li class="flex items-start">
+                <i
+                  data-lucide="map-pin"
+                  class="w-5 h-5 mr-3 text-gray-400 mt-0.5"
+                ></i>
+                <div>
+                  <span class="block font-medium text-gray-900">Location</span>
+                  <span class="text-sm text-gray-600"
+                    >DMI, University of Catania</span
+                  >
+                </div>
+              </li>
+              <li class="flex items-start">
+                <i
+                  data-lucide="book-open"
+                  class="w-5 h-5 mr-3 text-gray-400 mt-0.5"
+                ></i>
+                <div>
+                  <span class="block font-medium text-gray-900">Format</span>
+                  <span class="text-sm text-gray-600"
+                    >Lectures & Practical Labs (PyTorch)</span
+                  >
+                </div>
+              </li>
+              <li class="flex items-start">
+                <i
+                  data-lucide="file-text"
+                  class="w-5 h-5 mr-3 text-gray-400 mt-0.5"
+                ></i>
+                <div>
+                  <span class="block font-medium text-gray-900"
+                    >Intro Slides</span
+                  >
+                  <a
+                    href="slides/02-03-26-intro-slides-prospettive-informatiche.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-sm text-unictOrange hover:text-orange-700 font-medium"
+                    >General introduction (Slides) →</a
+                  >
+                  <!-- <br>
                                 <a href="slides/03-03-26-intro-course.pdf" target="_blank" rel="noopener noreferrer"
                                     class="text-sm text-unictOrange hover:text-orange-700 font-medium">Introduction to
                                     the Course &amp; Labs (Slides) →</a> -->
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <i data-lucide="clock" class="w-5 h-5 mr-3 text-gray-400 mt-0.5"></i>
-                            <div>
-                                <span class="block font-medium text-gray-900">Lectures</span>
-                                <span class="text-sm text-gray-600">Tuesdays & Thursdays <br> 17:00–19:00 — Room
-                                    127</span>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <i data-lucide="target" class="w-5 h-5 mr-3 text-gray-400 mt-0.5"></i>
-                            <div>
-                                <span class="block font-medium text-gray-900">Focus</span>
-                                <span class="text-sm text-gray-600">Advanced Deep Learning Models and Methods</span>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <i data-lucide="users" class="w-5 h-5 mr-3 text-gray-400 mt-0.5"></i>
-                            <div>
-                                <span class="block font-medium text-gray-900">MS Teams</span>
-                                <span class="text-sm text-gray-600">Code: <span
-                                        class="font-mono bg-gray-100 px-1 py-0.5 rounded">cq90ptp</span></span>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <i data-lucide="file-text" class="w-5 h-5 mr-3 text-gray-400 mt-0.5"></i>
-                            <div>
-                                <span class="block font-medium text-gray-900">Official Syllabus</span>
-                                <a href="https://web.dmi.unict.it/corsi/lm-18/insegnamenti?seuid=3540D939-DA16-4C1D-983C-E6B85C403F2F"
-                                    target="_blank" rel="noopener noreferrer"
-                                    class="text-sm text-unictOrange hover:text-orange-700 font-medium">View on DMI
-                                    Portal →</a>
-                            </div>
-                        </li>
-                    </ul>
-                </section>
-            </div>
-
-            <!-- Right Column: Schedule -->
-            <div class="lg:col-span-2">
-                <section id="schedule" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center">
-                        <i data-lucide="calendar" class="w-6 h-6 mr-3 text-unictOrange"></i> Course Schedule
-                    </h2>
-
-                    <div id="schedule-timeline" class="relative border-l-2 border-orange-100 ml-3 md:ml-4 space-y-8 pb-4">
-                        <noscript>
-                            <p class="text-sm text-gray-500 ml-4">Enable JavaScript to view the schedule.</p>
-                        </noscript>
-                    </div>
-                </section>
-            </div>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <i
+                  data-lucide="clock"
+                  class="w-5 h-5 mr-3 text-gray-400 mt-0.5"
+                ></i>
+                <div>
+                  <span class="block font-medium text-gray-900">Lectures</span>
+                  <span class="text-sm text-gray-600"
+                    >Tuesdays & Thursdays <br />
+                    17:00–19:00 — Room 127</span
+                  >
+                </div>
+              </li>
+              <li class="flex items-start">
+                <i
+                  data-lucide="target"
+                  class="w-5 h-5 mr-3 text-gray-400 mt-0.5"
+                ></i>
+                <div>
+                  <span class="block font-medium text-gray-900">Focus</span>
+                  <span class="text-sm text-gray-600"
+                    >Advanced Deep Learning Models and Methods</span
+                  >
+                </div>
+              </li>
+              <li class="flex items-start">
+                <i
+                  data-lucide="users"
+                  class="w-5 h-5 mr-3 text-gray-400 mt-0.5"
+                ></i>
+                <div>
+                  <span class="block font-medium text-gray-900">MS Teams</span>
+                  <span class="text-sm text-gray-600"
+                    >Code:
+                    <span class="font-mono bg-gray-100 px-1 py-0.5 rounded"
+                      >cq90ptp</span
+                    ></span
+                  >
+                </div>
+              </li>
+              <li class="flex items-start">
+                <i
+                  data-lucide="file-text"
+                  class="w-5 h-5 mr-3 text-gray-400 mt-0.5"
+                ></i>
+                <div>
+                  <span class="block font-medium text-gray-900"
+                    >Official Syllabus</span
+                  >
+                  <a
+                    href="https://web.dmi.unict.it/corsi/lm-18/insegnamenti?seuid=3540D939-DA16-4C1D-983C-E6B85C403F2F"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-sm text-unictOrange hover:text-orange-700 font-medium"
+                    >View on DMI Portal →</a
+                  >
+                </div>
+              </li>
+            </ul>
+          </section>
         </div>
+
+        <!-- Right Column: Schedule -->
+        <div class="lg:col-span-2">
+          <section
+            id="schedule"
+            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8"
+          >
+            <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center">
+              <i
+                data-lucide="calendar"
+                class="w-6 h-6 mr-3 text-unictOrange"
+              ></i>
+              Course Schedule
+            </h2>
+
+            <div
+              id="schedule-timeline"
+              class="relative border-l-2 border-orange-100 ml-3 md:ml-4 space-y-8 pb-4"
+            >
+              <noscript>
+                <p class="text-sm text-gray-500 ml-4">
+                  Enable JavaScript to view the schedule.
+                </p>
+              </noscript>
+            </div>
+          </section>
+        </div>
+      </div>
     </main>
 
     <footer class="bg-unictDark text-white py-12 border-t-4 border-unictOrange">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <p class="text-gray-400 mb-2">
+          Deep Learning: Advanced Models and Methods
+        </p>
+        <p class="text-gray-500 text-sm">
+          Department of Mathematics and Computer Science (DMI)<br />University
+          of Catania
+        </p>
 
-            <p class="text-gray-400 mb-2">Deep Learning: Advanced Models and Methods</p>
-            <p class="text-gray-500 text-sm">Department of Mathematics and Computer Science (DMI)<br>University of
-                Catania</p>
-
-            <div class="mt-6 inline-flex items-center justify-center gap-3 flex-wrap text-sm text-gray-300">
-                <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer"
-                    aria-label="Creative Commons BY-NC 4.0 License">
-                    <img src="https://licensebuttons.net/l/by-nc/4.0/88x31.png" alt="CC BY-NC 4.0" class="inline-block align-middle">
-                </a>
-                <span class="align-middle">
-                    <strong>CC BY-NC 4.0</strong> - non-commercial use with attribution.
-                    Full terms at the link.
-                </span>
-            </div>
-
+        <div
+          class="mt-6 inline-flex items-center justify-center gap-3 flex-wrap text-sm text-gray-300"
+        >
+          <a
+            href="https://creativecommons.org/licenses/by-nc/4.0/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Creative Commons BY-NC 4.0 License"
+          >
+            <img
+              src="https://licensebuttons.net/l/by-nc/4.0/88x31.png"
+              alt="CC BY-NC 4.0"
+              class="inline-block align-middle"
+            />
+          </a>
+          <span class="align-middle">
+            <strong>CC BY-NC 4.0</strong> - non-commercial use with attribution.
+            Full terms at the link.
+          </span>
         </div>
+      </div>
     </footer>
 
     <script>
-        // Initialize Icons
-        lucide.createIcons();
+      // Initialize Icons
+      lucide.createIcons();
 
-        // Node Network Animation for Header
-        const canvas = document.getElementById('network-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let numParticles = 80;
+      // Node Network Animation for Header
+      const canvas = document.getElementById("network-canvas");
+      const ctx = canvas.getContext("2d");
+      let particles = [];
+      let numParticles = 80;
 
-        function resize() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
+      function resize() {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      }
+
+      window.addEventListener("resize", resize);
+      resize();
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.vx = (Math.random() - 0.5) * 0.5;
+          this.vy = (Math.random() - 0.5) * 0.5;
+          this.radius = Math.random() * 2 + 1;
         }
 
-        window.addEventListener('resize', resize);
-        resize();
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.radius = Math.random() * 2 + 1;
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-            }
-
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = '#EA5B27';
-                ctx.fill();
-            }
+          if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+          if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
         }
 
-        for (let i = 0; i < numParticles; i++) {
-            particles.push(new Particle());
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = "#EA5B27";
+          ctx.fill();
         }
+      }
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < numParticles; i++) {
+        particles.push(new Particle());
+      }
 
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].update();
+          particles[i].draw();
 
-                    if (distance < 120) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = `rgba(234, 91, 39, ${1 - distance / 120})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 120) {
+              ctx.beginPath();
+              ctx.strokeStyle = `rgba(234, 91, 39, ${1 - distance / 120})`;
+              ctx.lineWidth = 0.5;
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.stroke();
             }
-            requestAnimationFrame(animate);
+          }
         }
+        requestAnimationFrame(animate);
+      }
 
-        animate();
+      animate();
     </script>
-        <script id="schedule-data" type="application/json">
-{
-    "sections": [
-        {
+    <script id="schedule-data" type="application/json">
+      {
+        "sections": [
+          {
             "type": "module",
             "title": "Introduction",
             "items": [
-                {
-                    "kind": "lecture",
-                    "title": "Introduction to the Course & Labs",
-                    "date": "03/03/26",
-                    "chips": [
-                        {
-                            "icon": "info",
-                            "label": "Room 126"
-                        }
-                    ],
-                    "links": [
-                        {
-                            "icon": "presentation",
-                            "label": "Slides",
-                            "url": "slides/03-03-26-intro-course.pdf"
-                        },
-                        {
-                            "icon": "notebook",
-                            "label": "Notebook",
-                            "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/03-03-26-intro-laboratories.ipynb"
-                        },
-                        {
-                            "variant": "colab",
-                            "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/03-03-26-intro-laboratories.ipynb"
-                        }
-                    ]
-                }
+              {
+                "kind": "lecture",
+                "title": "Introduction to the Course & Labs",
+                "date": "03/03/26",
+                "chips": [
+                  {
+                    "icon": "info",
+                    "label": "Room 126"
+                  }
+                ],
+                "links": [
+                  {
+                    "icon": "presentation",
+                    "label": "Slides",
+                    "url": "slides/03-03-26-intro-course.pdf"
+                  },
+                  {
+                    "icon": "notebook",
+                    "label": "Notebook",
+                    "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/03-03-26-intro-laboratories.ipynb"
+                  },
+                  {
+                    "variant": "colab",
+                    "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/03-03-26-intro-laboratories.ipynb"
+                  }
+                ]
+              }
             ]
-        },
-        {
+          },
+          {
             "type": "module",
             "title": "Sequential Learning recap",
             "items": [
-                {
-                    "kind": "lecture",
-                    "title": "Recap on Deep Sequential Modeling",
-                    "date": "05/03/26",
-                    "chips": [
-                        {
-                            "icon": "share2",
-                            "label": "Slides on MS Teams"
-                        }
-                    ]
-                },
-                {
-                    "kind": "lecture",
-                    "title": "Recap on Deep Sequential Modeling",
-                    "date": "17/03/26",
-                    "chips": [
-                        {
-                            "icon": "share2",
-                            "label": "Slides on MS Teams"
-                        }
-                    ]
-                },
-                {
-                    "kind": "lecture",
-                    "title": "Recap on deep sequential modeling",
-                    "date": "19/03/26",
-                    "chips": [
-                        {
-                            "icon": "share2",
-                            "label": "Slides on MS Teams"
-                        }
-                    ]
-                }
+              {
+                "kind": "lecture",
+                "title": "Recap on Deep Sequential Modeling",
+                "date": "05/03/26",
+                "chips": [
+                  {
+                    "icon": "share2",
+                    "label": "Slides on MS Teams"
+                  }
+                ]
+              },
+              {
+                "kind": "lecture",
+                "title": "Recap on Deep Sequential Modeling",
+                "date": "17/03/26",
+                "chips": [
+                  {
+                    "icon": "share2",
+                    "label": "Slides on MS Teams"
+                  }
+                ]
+              },
+              {
+                "kind": "lecture",
+                "title": "Metric Learning",
+                "date": "19/03/26",
+                "links": [
+                  {
+                    "icon": "presentation",
+                    "label": "Slides",
+                    "url": "slides/19-03-26-deep-metric-learning.pdf"
+                  }
+                ]
+              },
+              {
+                "kind": "lab",
+                "title": "Metric Learning Lab",
+                "date": "24/03/26",
+                "links": [
+                  {
+                    "icon": "notebook",
+                    "label": "Notebook",
+                    "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/24-03-26-deep-metric-learning.ipynb"
+                  },
+                  {
+                    "variant": "colab",
+                    "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/24-03-26-deep-metric-learning.ipynb"
+                  }
+                ]
+              }
             ]
-        },
-        {
-            "type": "module",
-            "title": "Metric Learning",
-            "items": [
-                {
-                    "kind": "lecture",
-                    "title": "Metric Learning",
-                    "date": "24/03/26",
-                    "links": [
-                        {
-                            "icon": "presentation",
-                            "label": "Slides",
-                            "url": "slides/19-03-26-deep-metric-learning.pdf"
-                        }
-                    ]
-                },
-                {
-                    "kind": "lab",
-                    "title": "Metric Learning Lab",
-                    "date": "26/03/26",
-                    "links": [
-                        {
-                            "icon": "notebook",
-                            "label": "Notebook",
-                            "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/24-03-26-deep-metric-learning.ipynb"
-                        },
-                        {
-                            "variant": "colab",
-                            "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/24-03-26-deep-metric-learning.ipynb"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
+          },
+          {
             "type": "module",
             "title": "Distillation & Adaptation",
             "items": [
-                {
-                    "kind": "lecture",
-                    "title": "Knowledge Distillation",
-                    "date": "07/04/26",
-                    "links": [
-                        {
-                            "icon": "presentation",
-                            "label": "Slides",
-                            "url": "slides/26-03-26-knowledge-distillation.pdf"
-                        }
-                    ]
-                },
-                {
-                    "kind": "lab",
-                    "title": "Knowledge Distillation Lab",
-                    "date": "09/04/26",
-                    "links": [
-                        {
-                            "icon": "notebook",
-                            "label": "Notebook",
-                            "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/07-04-26-knowledge-distillation.ipynb"
-                        },
-                        {
-                            "variant": "colab",
-                            "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/07-04-26-knowledge-distillation.ipynb"
-                        }
-                    ]
-                },
-                {
-                    "kind": "lecture",
-                    "title": "Domain Adaptation",
-                    "date": "16/04/26",
-                    "links": [
-                        {
-                            "icon": "presentation",
-                            "label": "Slides",
-                            "url": "slides/03-04-26-deep-domain-adaptation.pdf"
-                        }
-                    ]
-                },
-                {
-                    "kind": "seminar",
-                    "title": "Aitho Seminar",
-                    "date": "14/04/26"
-                },
-                {
-                    "kind": "lab",
-                    "title": "Domain Adaptation Lab",
-                    "date": "20/04/26",
-                    "links": [
-                        {
-                            "icon": "notebook",
-                            "label": "Notebook",
-                            "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/09-04-26-deep-domain-adaptation.ipynb"
-                        },
-                        {
-                            "variant": "colab",
-                            "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/09-04-26-deep-domain-adaptation.ipynb"
-                        }
-                    ]
-                }
+              {
+                "kind": "lecture",
+                "title": "Knowledge Distillation",
+                "date": "26/03/26",
+                "links": [
+                  {
+                    "icon": "presentation",
+                    "label": "Slides",
+                    "url": "slides/26-03-26-knowledge-distillation.pdf"
+                  }
+                ]
+              },
+              {
+                "kind": "lab",
+                "title": "Knowledge Distillation Lab",
+                "date": "07/04/26",
+                "links": [
+                  {
+                    "icon": "notebook",
+                    "label": "Notebook",
+                    "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/07-04-26-knowledge-distillation.ipynb"
+                  },
+                  {
+                    "variant": "colab",
+                    "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/07-04-26-knowledge-distillation.ipynb"
+                  }
+                ]
+              },
+              {
+                "kind": "lecture",
+                "title": "Domain Adaptation",
+                "date": "09/04/26",
+                "links": [
+                  {
+                    "icon": "presentation",
+                    "label": "Slides",
+                    "url": "slides/03-04-26-deep-domain-adaptation.pdf"
+                  }
+                ]
+              },
+              {
+                "kind": "seminar",
+                "title": "Aitho Seminar",
+                "date": "14/04/26"
+              },
+              {
+                "kind": "lecture",
+                "title": "Domain Adaptation",
+                "date": "16/04/26",
+                "links": [
+                  {
+                    "icon": "notebook",
+                    "label": "Notebook",
+                    "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/09-04-26-deep-domain-adaptation.ipynb"
+                  },
+                  {
+                    "variant": "colab",
+                    "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/09-04-26-deep-domain-adaptation.ipynb"
+                  }
+                ]
+              }
             ]
-        },
-        {
+          },
+          {
             "type": "module",
             "title": "Self-Supervised Learning",
             "items": [
-                {
-                    "kind": "lecture",
-                    "title": "Self-Supervised Learning",
-                    "date": "21/04/26",
-                    "chips": [
-                        {
-                            "icon": "share2",
-                            "label": "Slides on MS Teams"
-                        }
-                    ]
-                },
-                {
-                    "kind": "lab",
-                    "title": "Self-Supervised Learning Lab",
-                    "date": "23/04/26",
-                    "links": [
-                        {
-                            "icon": "notebook",
-                            "label": "Notebook",
-                            "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/21-04-26-self-supervised-learning.ipynb"
-                        },
-                        {
-                            "variant": "colab",
-                            "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/21-04-26-self-supervised-learning.ipynb"
-                        }
-                    ]
-                }
+              {
+                "kind": "lecture",
+                "title": "Self-Supervised Learning",
+                "date": "20/04/26",
+                "chips": [
+                  {
+                    "icon": "share2",
+                    "label": "Slides on MS Teams"
+                  },
+                  {
+                    "icon": "clock-3",
+                    "label": "14:00-16:00 · Room 24"
+                  }
+                ]
+              },
+              {
+                "kind": "lab",
+                "title": "Self-Supervised Learning Lab",
+                "date": "21/04/26",
+                "links": [
+                  {
+                    "icon": "notebook",
+                    "label": "Notebook",
+                    "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/21-04-26-self-supervised-learning.ipynb"
+                  },
+                  {
+                    "variant": "colab",
+                    "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/21-04-26-self-supervised-learning.ipynb"
+                  }
+                ]
+              }
             ]
-        },
-        {
+          },
+          {
             "type": "assessment",
             "title": "Prova in Itinere 1",
             "description": "Mid-term assessment covering topics up to Self-Supervised Learning.",
-            "date": "28/04/26"
-        },
-        {
+            "date": "23/04/26"
+          },
+          {
             "type": "module",
             "title": "Video & Multi-Modal Understanding",
             "items": [
-                {
-                    "kind": "lecture",
-                    "title": "Video Understanding",
-                    "date": "30/04/26",
-                    "chips": [
-                        {
-                            "icon": "share2",
-                            "label": "Slides on MS Teams"
-                        }
-                    ]
-                },
-                {
-                    "kind": "lab",
-                    "title": "Video Understanding Lab",
-                    "date": "05/05/26",
-                    "links": [
-                        {
-                            "icon": "notebook",
-                            "label": "Notebook",
-                            "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/05-05-26-video-understanding.ipynb"
-                        },
-                        {
-                            "variant": "colab",
-                            "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/05-05-26-video-understanding.ipynb"
-                        }
-                    ]
-                },
-                {
-                    "kind": "lecture",
-                    "title": "Vision & Language",
-                    "date": "07/05/26",
-                    "chips": [
-                        {
-                            "icon": "share2",
-                            "label": "Slides on MS Teams"
-                        }
-                    ]
-                },
-                {
-                    "kind": "lab",
-                    "title": "Vision & Language Lab",
-                    "date": "12/05/26",
-                    "links": [
-                        {
-                            "icon": "notebook",
-                            "label": "Notebook",
-                            "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/12-05-26-vision-and-language.ipynb"
-                        },
-                        {
-                            "variant": "colab",
-                            "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/12-05-26-vision-and-language.ipynb"
-                        }
-                    ]
-                }
+              {
+                "kind": "lecture",
+                "title": "Video Understanding",
+                "date": "28/04/26",
+                "chips": [
+                  {
+                    "icon": "share2",
+                    "label": "Slides on MS Teams"
+                  }
+                ]
+              },
+              {
+                "kind": "lab",
+                "title": "Video Understanding Lab",
+                "date": "30/04/26",
+                "links": [
+                  {
+                    "icon": "notebook",
+                    "label": "Notebook",
+                    "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/05-05-26-video-understanding.ipynb"
+                  },
+                  {
+                    "variant": "colab",
+                    "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/05-05-26-video-understanding.ipynb"
+                  }
+                ]
+              },
+              {
+                "kind": "lecture",
+                "title": "Vision & Language",
+                "date": "05/05/26",
+                "chips": [
+                  {
+                    "icon": "share2",
+                    "label": "Slides on MS Teams"
+                  }
+                ]
+              },
+              {
+                "kind": "lab",
+                "title": "Vision & Language Lab",
+                "date": "07/05/26",
+                "links": [
+                  {
+                    "icon": "notebook",
+                    "label": "Notebook",
+                    "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/12-05-26-vision-and-language.ipynb"
+                  },
+                  {
+                    "variant": "colab",
+                    "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/12-05-26-vision-and-language.ipynb"
+                  }
+                ]
+              }
             ]
-        },
-        {
+          },
+          {
             "type": "module",
             "title": "Advanced Models",
             "items": [
-                {
-                    "kind": "lecture",
-                    "title": "Advanced Sequential Modeling",
-                    "date": "19/05/26",
-                    "links": [
-                        {
-                            "icon": "presentation",
-                            "label": "Slides",
-                            "url": "slides/12-05-26-advanced-sequential-modeling.pdf"
-                        }
-                    ]
-                },
-                {
-                    "kind": "lab",
-                    "title": "Sequential Modeling Lab",
-                    "date": "21/05/26",
-                    "links": [
-                        {
-                            "icon": "notebook",
-                            "label": "Notebook",
-                            "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/19-05-26-advanced-sequential-modeling.ipynb"
-                        },
-                        {
-                            "variant": "colab",
-                            "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/19-05-26-advanced-sequential-modeling.ipynb"
-                        }
-                    ]
-                },
-                {
-                    "kind": "lecture",
-                    "title": "Reinforcement Learning",
-                    "date": "26/05/26",
-                    "links": [
-                        {
-                            "icon": "presentation",
-                            "label": "Slides",
-                            "disabled": true
-                        }
-                    ]
-                },
-                {
-                    "kind": "lab",
-                    "title": "Reinforcement Learning Lab",
-                    "date": "28/05/26",
-                    "links": [
-                        {
-                            "icon": "notebook",
-                            "label": "Notebook",
-                            "disabled": true
-                        }
-                    ]
-                },
-                {
-                    "kind": "seminar",
-                    "title": "Seminar: TBA",
-                    "date": "09/06/26"
-                }
+              {
+                "kind": "lecture",
+                "title": "Advanced Sequential Modeling",
+                "date": "12/05/26",
+                "links": [
+                  {
+                    "icon": "presentation",
+                    "label": "Slides",
+                    "url": "slides/12-05-26-advanced-sequential-modeling.pdf"
+                  }
+                ]
+              },
+              {
+                "kind": "lab",
+                "title": "Sequential Modeling Lab",
+                "date": "19/05/26",
+                "links": [
+                  {
+                    "icon": "notebook",
+                    "label": "Notebook",
+                    "url": "https://github.com/antoninofurnari/deeplearning/blob/main/notebooks/19-05-26-advanced-sequential-modeling.ipynb"
+                  },
+                  {
+                    "variant": "colab",
+                    "url": "https://colab.research.google.com/github/antoninofurnari/deeplearning/blob/main/notebooks/19-05-26-advanced-sequential-modeling.ipynb"
+                  }
+                ]
+              },
+              {
+                "kind": "lecture",
+                "title": "Reinforcement Learning",
+                "date": "21/05/26",
+                "links": [
+                  {
+                    "icon": "presentation",
+                    "label": "Slides",
+                    "disabled": true
+                  }
+                ]
+              },
+              {
+                "kind": "lab",
+                "title": "Reinforcement Learning Lab",
+                "date": "26/05/26",
+                "links": [
+                  {
+                    "icon": "notebook",
+                    "label": "Notebook",
+                    "disabled": true
+                  }
+                ]
+              },
+              {
+                "kind": "seminar",
+                "title": "Seminar: TBA",
+                "date": "28/05/26"
+              },
+              {
+                "kind": "seminar",
+                "title": "Seminar: TBA",
+                "date": "09/06/26"
+              }
             ]
-        },
-        {
+          },
+          {
             "type": "assessment",
             "title": "Prova in Itinere 2",
             "description": "Final assessment covering advanced topics and architectures.",
             "date": "11/06/26"
-        }
-    ]
-}
-        </script>
+          }
+        ]
+      }
+    </script>
     <script>
-                // Render the schedule from embedded JSON.
-        (function () {
-            function escapeHtml(value) {
-                return String(value)
-                    .replaceAll('&', '&amp;')
-                    .replaceAll('<', '&lt;')
-                    .replaceAll('>', '&gt;')
-                    .replaceAll('"', '&quot;')
-                    .replaceAll("'", '&#39;');
-            }
+      // Render the schedule from embedded JSON.
+      (function () {
+        function escapeHtml(value) {
+          return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#39;");
+        }
 
-            function renderDateChip(date, inverted) {
-                const chipClass = inverted
-                    ? 'inline-flex items-center gap-2 px-3 py-1 bg-white text-unictOrange text-xs font-semibold rounded-full'
-                    : 'inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full';
+        function renderDateChip(date, inverted) {
+          const chipClass = inverted
+            ? "inline-flex items-center gap-2 px-3 py-1 bg-white text-unictOrange text-xs font-semibold rounded-full"
+            : "inline-flex items-center gap-2 px-3 py-1 bg-unictOrange text-white text-xs font-semibold rounded-full";
 
-                return `
+          return `
                     <span class="${chipClass}">
                         <i data-lucide="calendar" class="w-3 h-3"></i> ${escapeHtml(date)}
                     </span>
                 `;
-            }
+        }
 
-            function renderChip(chip) {
-                const tone = chip.tone === 'neutral' ? 'bg-gray-100 text-gray-700' : 'bg-blue-100 text-blue-700';
-                return `
+        function renderChip(chip) {
+          const tone =
+            chip.tone === "neutral"
+              ? "bg-gray-100 text-gray-700"
+              : "bg-blue-100 text-blue-700";
+          return `
                     <span class="inline-flex items-center gap-1 px-2 py-1 ${tone} text-xs font-semibold rounded">
-                        <i data-lucide="${escapeHtml(chip.icon || 'info')}" class="w-3 h-3"></i> ${escapeHtml(chip.label)}
+                        <i data-lucide="${escapeHtml(chip.icon || "info")}" class="w-3 h-3"></i> ${escapeHtml(chip.label)}
                     </span>
                 `;
-            }
+        }
 
-            function renderLink(link) {
-                if (link.disabled) {
-                    return `
+        function renderLink(link) {
+          if (link.disabled) {
+            return `
                         <button disabled
                             class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-400 text-xs font-semibold rounded cursor-not-allowed">
-                            <i data-lucide="${escapeHtml(link.icon || 'file-text')}" class="w-3 h-3"></i> ${escapeHtml(link.label)}
+                            <i data-lucide="${escapeHtml(link.icon || "file-text")}" class="w-3 h-3"></i> ${escapeHtml(link.label)}
                         </button>
                     `;
-                }
+          }
 
-                if (link.variant === 'colab') {
-                    return `
+          if (link.variant === "colab") {
+            return `
                         <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer"
                             class="inline-flex items-center justify-center p-1.5 bg-white border border-gray-200 hover:border-unictOrange rounded transition-colors"
                             aria-label="Open notebook in Google Colab" title="Open in Google Colab">
                             <img src="https://colab.research.google.com/img/colab_favicon_256px.png" alt="Colab" class="w-4 h-4">
                         </a>
                     `;
-                }
+          }
 
-                const className = link.variant === 'neutral'
-                    ? 'inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded'
-                    : 'inline-flex items-center gap-1 px-2 py-1 bg-unictOrange hover:bg-orange-700 text-white text-xs font-semibold rounded transition-colors';
+          const className =
+            link.variant === "neutral"
+              ? "inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded"
+              : "inline-flex items-center gap-1 px-2 py-1 bg-unictOrange hover:bg-orange-700 text-white text-xs font-semibold rounded transition-colors";
 
-                return `
+          return `
                     <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer" class="${className}">
-                        <i data-lucide="${escapeHtml(link.icon || 'link')}" class="w-3 h-3"></i> ${escapeHtml(link.label)}
+                        <i data-lucide="${escapeHtml(link.icon || "link")}" class="w-3 h-3"></i> ${escapeHtml(link.label)}
                     </a>
                 `;
-            }
+        }
 
-            function renderItem(item) {
-                if (item.kind === 'seminar') {
-                    return `
-                        <li class="flex items-center justify-between text-white bg-unictOrange px-4 py-2 rounded-lg border border-orange-700 shadow-sm" style="width:110%; margin-left:-10%;">
+        function renderItem(item) {
+          if (item.kind === "seminar") {
+            return `
+                        <li data-date="${escapeHtml(item.date || "")}" class="seminar-item flex items-center justify-between text-white bg-unictOrange px-4 py-2 rounded-lg border border-orange-700 shadow-sm" style="width:110%; margin-left:-10%;">
                             <span class="flex items-center font-semibold">
                                 <i data-lucide="presentation" class="w-4 h-4 mr-3 text-white"></i> ${escapeHtml(item.title)}
                             </span>
                             ${renderDateChip(item.date, true)}
                         </li>
                     `;
-                }
+          }
 
-                const rowClass = item.kind === 'lab'
-                    ? 'flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100'
-                    : 'flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg';
-                const icon = item.icon || (item.kind === 'lab' ? 'code' : 'book');
-                const iconColor = item.kind === 'lab' ? 'text-unictOrange' : 'text-gray-400';
+          const rowClass =
+            item.kind === "lab"
+              ? "flex items-center justify-between text-gray-600 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100"
+              : "flex items-center justify-between text-gray-600 bg-gray-50 px-4 py-2 rounded-lg";
+          const icon = item.icon || (item.kind === "lab" ? "code" : "book");
+          const iconColor =
+            item.kind === "lab" ? "text-unictOrange" : "text-gray-400";
 
-                const chips = Array.isArray(item.chips) ? item.chips.map(renderChip).join('') : '';
-                const links = Array.isArray(item.links) ? item.links.map(renderLink).join('') : '';
+          const chips = Array.isArray(item.chips)
+            ? item.chips.map(renderChip).join("")
+            : "";
+          const links = Array.isArray(item.links)
+            ? item.links.map(renderLink).join("")
+            : "";
 
-                return `
-                    <li class="${rowClass}">
+          return `
+                    <li data-date="${escapeHtml(item.date || "")}" class="${rowClass}">
                         <span class="flex items-center">
                             <i data-lucide="${escapeHtml(icon)}" class="w-4 h-4 mr-3 ${iconColor}"></i> ${escapeHtml(item.title)}
                         </span>
@@ -794,117 +963,297 @@
                         </div>
                     </li>
                 `;
-            }
+        }
 
-            function renderModule(section) {
-                const items = (section.items || []).map(renderItem).join('');
-                return `
+        function renderModule(section) {
+          const items = (section.items || []).map(renderItem).join("");
+          return `
                     <div class="relative pl-8">
                         <div class="absolute w-4 h-4 bg-white border-2 border-unictOrange rounded-full -left-[9px] top-1"></div>
                         <h3 class="text-lg font-bold text-gray-900">${escapeHtml(section.title)}</h3>
                         <ul class="mt-3 space-y-2">${items}</ul>
                     </div>
                 `;
-            }
+        }
 
-            function renderAssessment(section) {
-                return `
-                    <div class="relative pl-8">
-                        <div class="absolute w-6 h-6 bg-unictOrange rounded-full -left-[13px] top-0 flex items-center justify-center shadow-md">
-                            <i data-lucide="check" class="w-3 h-3 text-white"></i>
+        function renderAssessment(section) {
+          return `
+                    <div class="relative pl-8" data-date="${escapeHtml(section.date || "")}">
+                        <div class="absolute w-6 h-6 bg-white border-2 border-unictOrange rounded-full -left-[13px] top-0 flex items-center justify-center shadow-md">
+                            <i data-lucide="check" class="w-3 h-3 text-unictOrange"></i>
                         </div>
-                        <div class="bg-gray-900 text-white p-4 rounded-lg shadow-md flex items-center justify-between">
+                        <div class="assessment-card bg-gray-900 text-white p-4 rounded-lg shadow-md flex items-center justify-between">
                             <div>
                                 <h3 class="text-lg font-bold flex items-center">${escapeHtml(section.title)}</h3>
-                                <p class="text-gray-300 text-sm mt-1">${escapeHtml(section.description || '')}</p>
+                                <p class="text-gray-300 text-sm mt-1">${escapeHtml(section.description || "")}</p>
                             </div>
                             ${renderDateChip(section.date, false)}
                         </div>
                     </div>
                 `;
+        }
+
+        function renderTimeline(sections) {
+          return sections
+            .map((section) => {
+              if (section.type === "assessment") {
+                return renderAssessment(section);
+              }
+              return renderModule(section);
+            })
+            .join("");
+        }
+
+        async function loadSchedule() {
+          const timeline = document.getElementById("schedule-timeline");
+          if (!timeline) return;
+
+          try {
+            const embedded = document.getElementById("schedule-data");
+            if (
+              embedded &&
+              embedded.textContent &&
+              embedded.textContent.trim()
+            ) {
+              const data = JSON.parse(embedded.textContent);
+              if (!Array.isArray(data.sections)) {
+                throw new Error(
+                  "Invalid embedded schedule format: sections array is missing.",
+                );
+              }
+
+              timeline.innerHTML = renderTimeline(data.sections);
+              lucide.createIcons();
+              markPastItems();
+              insertTodayMarker();
+              return;
             }
 
-            function renderTimeline(sections) {
-                return sections.map((section) => {
-                    if (section.type === 'assessment') {
-                        return renderAssessment(section);
-                    }
-                    return renderModule(section);
-                }).join('');
+            throw new Error("Embedded schedule data is missing.");
+          } catch (error) {
+            console.error("Schedule loading failed.", error);
+          }
+        }
+
+        function markPastItems() {
+          const timeline = document.getElementById("schedule-timeline");
+          if (!timeline) return;
+
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          function parseDateStr(str) {
+            if (!str) return null;
+            const parts = str.split("/");
+            if (parts.length !== 3) return null;
+            const [d, m, y] = parts.map(Number);
+            return new Date(2000 + y, m - 1, d);
+          }
+
+          // Mark individual past items
+          const allDated = timeline.querySelectorAll("[data-date]");
+          allDated.forEach((el) => {
+            const d = parseDateStr(el.dataset.date);
+            if (d && d < today) {
+              // Assessments are direct timeline children with data-date but no [data-date] children
+              const isAssessment =
+                el.parentElement === timeline &&
+                !el.querySelectorAll("[data-date]").length;
+              el.classList.add(isAssessment ? "past-assessment" : "past-item");
             }
+          });
 
-            async function loadSchedule() {
-                const timeline = document.getElementById('schedule-timeline');
-                if (!timeline) return;
-
-                try {
-                    const embedded = document.getElementById('schedule-data');
-                    if (embedded && embedded.textContent && embedded.textContent.trim()) {
-                        const data = JSON.parse(embedded.textContent);
-                        if (!Array.isArray(data.sections)) {
-                            throw new Error('Invalid embedded schedule format: sections array is missing.');
-                        }
-
-                        timeline.innerHTML = renderTimeline(data.sections);
-                        lucide.createIcons();
-                        return;
-                    }
-
-                    throw new Error('Embedded schedule data is missing.');
-                } catch (error) {
-                    console.error('Schedule loading failed.', error);
+          // Mark module dots as filled if all items in that module are past
+          const modules = timeline.querySelectorAll(":scope > div.relative");
+          modules.forEach((mod) => {
+            const items = mod.querySelectorAll("[data-date]");
+            // Assessment: data-date is on the div itself, no children with dates
+            if (!items.length) {
+              if (mod.dataset.date) {
+                const d = parseDateStr(mod.dataset.date);
+                if (d && d < today) {
+                  const dot = mod.querySelector(".rounded-full");
+                  if (dot) dot.classList.add("past-module-dot");
                 }
+              }
+              return;
             }
+            const allPast = Array.from(items).every((el) =>
+              el.classList.contains("past-item"),
+            );
+            if (allPast) {
+              const dot = mod.querySelector(".rounded-full");
+              if (dot) dot.classList.add("past-module-dot");
+            }
+          });
 
-            window.addEventListener('DOMContentLoaded', loadSchedule);
-        })();
+          // If all items are past, course is ended: restore full opacity
+          const allItems = timeline.querySelectorAll("[data-date]");
+          const allPastGlobal =
+            allItems.length > 0 &&
+            Array.from(allItems).every((el) =>
+              el.classList.contains("past-item"),
+            );
+          if (allPastGlobal) {
+            timeline.classList.add("course-ended");
+          }
+        }
+
+        function insertTodayMarker() {
+          const timeline = document.getElementById("schedule-timeline");
+          if (!timeline) return;
+
+          // Don't show marker if course is ended
+          if (timeline.classList.contains("course-ended")) return;
+
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          function parseDateStr(str) {
+            if (!str) return null;
+            const parts = str.split("/");
+            if (parts.length !== 3) return null;
+            const [d, m, y] = parts.map(Number);
+            return new Date(2000 + y, m - 1, d);
+          }
+
+          // Collect all date-bearing elements in DOM order
+          const allDated = Array.from(timeline.querySelectorAll("[data-date]"));
+          if (!allDated.length) return;
+
+          // Find the last element with date < today and first with date >= today
+          let lastBefore = null;
+          let firstAfter = null;
+          let todayExact = null;
+
+          for (const el of allDated) {
+            const d = parseDateStr(el.dataset.date);
+            if (!d) continue;
+            if (d.getTime() === today.getTime()) todayExact = el;
+            if (d < today) lastBefore = el;
+            else if (!firstAfter) firstAfter = el;
+          }
+
+          if (!lastBefore && !firstAfter) return;
+
+          // Build marker label
+          let markerLabel = "Oggi";
+          if (!todayExact && firstAfter) {
+            const nextDate = parseDateStr(firstAfter.dataset.date);
+            if (nextDate) {
+              const diffMs = nextDate - today;
+              const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+              if (diffDays === 1) {
+                markerLabel = "Prossima lezione domani";
+              } else {
+                markerLabel = `Prossima lezione tra ${diffDays} giorni`;
+              }
+            }
+          }
+
+          function createMarkerLi() {
+            const li = document.createElement("li");
+            li.className = "today-marker-line flex items-center py-1";
+            li.innerHTML = `
+                        <div class="w-3 h-3 bg-red-500 rounded-full border-2 border-white shadow-md flex-shrink-0"></div>
+                        <div class="flex-1 h-0.5 bg-red-500 mx-2 rounded"></div>
+                        <span class="text-xs font-bold text-red-500 whitespace-nowrap uppercase tracking-wide">${markerLabel}</span>
+                    `;
+            return li;
+          }
+
+          function createMarkerDiv() {
+            const div = document.createElement("div");
+            div.className = "today-marker-line relative flex items-center pl-8";
+            div.innerHTML = `
+                        <div class="absolute -left-[7px] w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-white shadow-md z-10"></div>
+                        <div class="flex-1 h-0.5 bg-red-500 rounded"></div>
+                        <span class="ml-2 text-xs font-bold text-red-500 whitespace-nowrap uppercase tracking-wide">${markerLabel}</span>
+                    `;
+            return div;
+          }
+
+          // Determine insertion point
+          if (lastBefore) {
+            const nextSibling = lastBefore.nextElementSibling;
+            if (lastBefore.tagName === "LI") {
+              // Insert as <li> sibling within the same <ul>
+              lastBefore.after(createMarkerLi());
+            } else {
+              // Section-level element: bubble up to timeline child
+              let sectionEl = lastBefore;
+              while (sectionEl && sectionEl.parentElement !== timeline)
+                sectionEl = sectionEl.parentElement;
+              if (sectionEl) sectionEl.after(createMarkerDiv());
+            }
+          } else if (firstAfter) {
+            // Today is before all items
+            let sectionEl = firstAfter;
+            while (sectionEl && sectionEl.parentElement !== timeline)
+              sectionEl = sectionEl.parentElement;
+            if (sectionEl) sectionEl.before(createMarkerDiv());
+          }
+
+          // Scroll the today marker into view after a short delay
+          setTimeout(() => {
+            const marker = timeline.querySelector(".today-marker-line");
+            if (marker) {
+              marker.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+          }, 300);
+        }
+
+        window.addEventListener("DOMContentLoaded", loadSchedule);
+      })();
     </script>
     <script>
-        // Highlight anchored sections briefly when navigating in-page links
-        (function () {
-            const HIGHLIGHT_CLASS = 'anchor-highlight';
-            const HIGHLIGHT_DURATION = 700; // ms (shorter highlight)
+      // Highlight anchored sections briefly when navigating in-page links
+      (function () {
+        const HIGHLIGHT_CLASS = "anchor-highlight";
+        const HIGHLIGHT_DURATION = 700; // ms (shorter highlight)
 
-            function highlight(target) {
-                if (!target) return;
-                target.classList.add(HIGHLIGHT_CLASS);
-                window.setTimeout(() => target.classList.remove(HIGHLIGHT_CLASS), HIGHLIGHT_DURATION);
-            }
+        function highlight(target) {
+          if (!target) return;
+          target.classList.add(HIGHLIGHT_CLASS);
+          window.setTimeout(
+            () => target.classList.remove(HIGHLIGHT_CLASS),
+            HIGHLIGHT_DURATION,
+          );
+        }
 
-            // Intercept clicks on same-page anchors to control scrolling + highlight
-            document.addEventListener('click', (e) => {
-                const a = e.target.closest('a[href^="#"]');
-                if (!a) return;
-                const hash = a.getAttribute('href');
-                if (!hash || hash === '#') return;
-                const target = document.querySelector(hash);
-                if (!target) return;
+        // Intercept clicks on same-page anchors to control scrolling + highlight
+        document.addEventListener("click", (e) => {
+          const a = e.target.closest('a[href^="#"]');
+          if (!a) return;
+          const hash = a.getAttribute("href");
+          if (!hash || hash === "#") return;
+          const target = document.querySelector(hash);
+          if (!target) return;
 
-                // Prevent default and perform smooth scroll, then highlight
-                e.preventDefault();
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                // Add small delay to let the browser begin scroll animation
-                window.setTimeout(() => highlight(target), 80);
+          // Prevent default and perform smooth scroll, then highlight
+          e.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          // Add small delay to let the browser begin scroll animation
+          window.setTimeout(() => highlight(target), 80);
 
-                // Update the URL hash without jumping
-                history.pushState(null, '', hash);
-            });
+          // Update the URL hash without jumping
+          history.pushState(null, "", hash);
+        });
 
-            // Also highlight when navigating via back/forward or direct hash changes
-            window.addEventListener('hashchange', () => {
-                const target = document.querySelector(location.hash);
-                if (target) highlight(target);
-            });
+        // Also highlight when navigating via back/forward or direct hash changes
+        window.addEventListener("hashchange", () => {
+          const target = document.querySelector(location.hash);
+          if (target) highlight(target);
+        });
 
-            // Highlight on page load if there's a hash
-            window.addEventListener('load', () => {
-                if (location.hash) {
-                    const target = document.querySelector(location.hash);
-                    if (target) window.setTimeout(() => highlight(target), 200);
-                }
-            });
-        })();
+        // Highlight on page load if there's a hash
+        window.addEventListener("load", () => {
+          if (location.hash) {
+            const target = document.querySelector(location.hash);
+            if (target) window.setTimeout(() => highlight(target), 200);
+          }
+        });
+      })();
     </script>
-</body>
-
+  </body>
 </html>
